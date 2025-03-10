@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriChef - Asistente de Planificación de Comidas</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f5f9;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .chat-area {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+        #userInput {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .bot {
+            background: #e3f2fd;
+            margin-right: 20%;
+        }
+        .user {
+            background: #f1f8e9;
+            margin-left: 20%;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍳 NutriChef</h1>
+        <div class="chat-area" id="chatArea"></div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Escribe tu mensaje aquí...">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        // Ofuscación básica usando una función auto-ejecutable
+        (function(){
+            const _0x4f8a=['log','value','Enviar\x20mensaje','push','NutriChef:\x20','userInput','addEventListener','keyup','key','Enter','preventDefault','chatArea','createElement','div','message\x20','innerHTML','appendChild','scrollTop','scrollHeight','Usuario:\x20','className','bot','user','querySelector','#userInput','#chatArea'];
+            const _0x5c1b=function(_0x4f8a){return _0x4f8a};
+            
+            // Estado del chat
+            let currentStep = 0;
+            let userData = {
+                ingredients: '',
+                restrictions: '',
+                cookingTime: '',
+                goal: ''
+            };
+
+            // Mensajes del sistema
+            const systemMessages = [
+                "¡Hola! 👋 Soy NutriChef, tu asistente de planificación de comidas. Vamos a crear un menú semanal saludable y económico con lo que tienes en casa.\n\n📦 **Paso 1**: Dime TODOS los ingredientes que tienes (sepáralos con comas). Ej: 'arroz, pollo, huevos, espinacas, avena'. Si no tienes nada, di '¡Ayuda! 🆘' y te sugeriré una lista básica.",
+                "🍴 **Paso 2**: ¿Alguna preferencia o restricción alimentaria? (Ej: vegano, sin gluten, bajo en carbohidratos, etc.). Si no, escribe 'ninguna'.",
+                "⏱️ **Paso 3**: ¿Cuánto tiempo promedio tienes para cocinar al día?\na) <30 min 🚀\nb) 30-60 min ⏳\nc) >60 min 🧘",
+                "🎯 **Paso 4**: ¿Qué objetivo tienes con este plan?\na) Ahorrar dinero 💰\nb) Comer más saludable 🥗\nc) Perder peso ⚖️\nd) Ganar músculo 💪\ne) Solo variedad y organización 🗓️"
+            ];
+
+            // Inicializar chat
+            window.onload = () => {
+                addMessage(systemMessages[0], 'bot');
+            };
+
+            // Manejar envío de mensajes
+            window.sendMessage = () => {
+                const input = document.querySelector(_0x5c1b(_0x4f8a[24]));
+                const message = input[_0x5c1b(_0x4f8a[1])].trim();
+                
+                if (message) {
+                    addMessage(message, 'user');
+                    processUserInput(message);
+                    input[_0x5c1b(_0x4f8a[1])] = '';
+                }
+            };
+
+            // Procesar entrada del usuario
+            function processUserInput(message) {
+                switch(currentStep) {
+                    case 0:
+                        userData.ingredients = message;
+                        addMessage(systemMessages[1], 'bot');
+                        break;
+                    case 1:
+                        userData.restrictions = message;
+                        addMessage(systemMessages[2], 'bot');
+                        break;
+                    case 2:
+                        userData.cookingTime = message;
+                        addMessage(systemMessages[3], 'bot');
+                        break;
+                    case 3:
+                        userData.goal = message;
+                        generateMealPlan();
+                        break;
+                }
+                currentStep++;
+            }
+
+            // Función para generar el plan de comidas
+            function generateMealPlan() {
+                const planMessage = "¡Gracias por proporcionar toda la información! Estoy procesando tu plan de comidas personalizado...";
+                addMessage(planMessage, 'bot');
+                // Aquí iría la lógica para generar el plan de comidas
+            }
+
+            // Agregar mensaje al chat
+            function addMessage(text, type) {
+                const chatArea = document.querySelector(_0x5c1b(_0x4f8a[25]));
+                const messageDiv = document[_0x5c1b(_0x4f8a[12])](_0x5c1b(_0x4f8a[13]));
+                messageDiv.className = _0x5c1b(_0x4f8a[14]) + type;
+                messageDiv[_0x5c1b(_0x4f8a[15])] = text;
+                chatArea[_0x5c1b(_0x4f8a[16])](messageDiv);
+                chatArea[_0x5c1b(_0x4f8a[17])] = chatArea[_0x5c1b(_0x4f8a[18])];
+            }
+
+            // Event listener para la tecla Enter
+            document.querySelector(_0x5c1b(_0x4f8a[24]))[_0x5c1b(_0x4f8a[6])](_0x5c1b(_0x4f8a[7]), (e) => {
+                if (e[_0x5c1b(_0x4f8a[8])] === _0x5c1b(_0x4f8a[9])) {
+                    e[_0x5c1b(_0x4f8a[10])]();
+                    sendMessage();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
