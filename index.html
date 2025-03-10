@@ -57,6 +57,7 @@
             margin: 10px 0;
             padding: 10px;
             border-radius: 5px;
+            white-space: pre-wrap;
         }
         .bot {
             background: #e3f2fd;
@@ -80,12 +81,7 @@
     </div>
 
     <script>
-        // Ofuscación básica usando una función auto-ejecutable
         (function(){
-            const _0x4f8a=['log','value','Enviar\x20mensaje','push','NutriChef:\x20','userInput','addEventListener','keyup','key','Enter','preventDefault','chatArea','createElement','div','message\x20','innerHTML','appendChild','scrollTop','scrollHeight','Usuario:\x20','className','bot','user','querySelector','#userInput','#chatArea'];
-            const _0x5c1b=function(_0x4f8a){return _0x4f8a};
-            
-            // Estado del chat
             let currentStep = 0;
             let userData = {
                 ingredients: '',
@@ -94,7 +90,6 @@
                 goal: ''
             };
 
-            // Mensajes del sistema
             const systemMessages = [
                 "¡Hola! 👋 Soy NutriChef, tu asistente de planificación de comidas. Vamos a crear un menú semanal saludable y económico con lo que tienes en casa.\n\n📦 **Paso 1**: Dime TODOS los ingredientes que tienes (sepáralos con comas). Ej: 'arroz, pollo, huevos, espinacas, avena'. Si no tienes nada, di '¡Ayuda! 🆘' y te sugeriré una lista básica.",
                 "🍴 **Paso 2**: ¿Alguna preferencia o restricción alimentaria? (Ej: vegano, sin gluten, bajo en carbohidratos, etc.). Si no, escribe 'ninguna'.",
@@ -102,24 +97,83 @@
                 "🎯 **Paso 4**: ¿Qué objetivo tienes con este plan?\na) Ahorrar dinero 💰\nb) Comer más saludable 🥗\nc) Perder peso ⚖️\nd) Ganar músculo 💪\ne) Solo variedad y organización 🗓️"
             ];
 
-            // Inicializar chat
+            const mealTemplates = {
+                quick: {
+                    desayunos: [
+                        "Avena con frutas y miel",
+                        "Tostadas integrales con huevo revuelto",
+                        "Batido de proteínas con plátano",
+                        "Yogur con granola y frutas",
+                        "Pan integral con aguacate",
+                        "Huevos cocidos con tostadas",
+                        "Smoothie bowl de frutas"
+                    ],
+                    almuerzos: [
+                        "Ensalada de atún con verduras",
+                        "Bowl de quinoa con vegetales",
+                        "Wrap de pollo con verduras",
+                        "Pasta integral con verduras salteadas",
+                        "Arroz con legumbres",
+                        "Ensalada de garbanzos",
+                        "Sándwich integral de pavo"
+                    ],
+                    meriendas: [
+                        "Frutas frescas",
+                        "Puñado de frutos secos",
+                        "Yogur natural",
+                        "Galletas integrales con hummus",
+                        "Batido de frutas",
+                        "Rodajas de manzana con mantequilla de maní",
+                        "Zanahorias baby con hummus"
+                    ],
+                    cenas: [
+                        "Sopa de verduras con pollo",
+                        "Pescado al horno con vegetales",
+                        "Tortilla de vegetales",
+                        "Ensalada completa con proteína",
+                        "Bowl de arroz con verduras y huevo",
+                        "Wrap de atún con ensalada",
+                        "Salteado de tofu con verduras"
+                    ]
+                }
+            };
+
+            function generateMealPlan() {
+                let plan = "📋 **Tu Plan Semanal Personalizado**\n\n";
+                
+                for (let dia = 1; dia <= 7; dia++) {
+                    plan += `📅 **Día ${dia}:**\n`;
+                    plan += `🌅 **Desayuno:** ${mealTemplates.quick.desayunos[dia-1]}\n`;
+                    plan += `🍽️ **Almuerzo:** ${mealTemplates.quick.almuerzos[dia-1]}\n`;
+                    plan += `🍎 **Merienda:** ${mealTemplates.quick.meriendas[dia-1]}\n`;
+                    plan += `🌙 **Cena:** ${mealTemplates.quick.cenas[dia-1]}\n\n`;
+                }
+
+                plan += "\n💡 **Consejos adicionales:**\n";
+                plan += "- Ajusta las porciones según tus necesidades\n";
+                plan += "- Bebe suficiente agua durante el día\n";
+                plan += "- Intenta mantener horarios regulares de comida\n";
+                plan += "- Guarda las sobras para el día siguiente\n\n";
+                plan += "¿Necesitas que te explique alguna receta en particular? 😊";
+
+                return plan;
+            }
+
             window.onload = () => {
                 addMessage(systemMessages[0], 'bot');
             };
 
-            // Manejar envío de mensajes
             window.sendMessage = () => {
-                const input = document.querySelector(_0x5c1b(_0x4f8a[24]));
-                const message = input[_0x5c1b(_0x4f8a[1])].trim();
+                const input = document.querySelector('#userInput');
+                const message = input.value.trim();
                 
                 if (message) {
                     addMessage(message, 'user');
                     processUserInput(message);
-                    input[_0x5c1b(_0x4f8a[1])] = '';
+                    input.value = '';
                 }
             };
 
-            // Procesar entrada del usuario
             function processUserInput(message) {
                 switch(currentStep) {
                     case 0:
@@ -136,33 +190,31 @@
                         break;
                     case 3:
                         userData.goal = message;
-                        generateMealPlan();
+                        addMessage("¡Gracias por proporcionar toda la información! Estoy procesando tu plan de comidas personalizado...", 'bot');
+                        setTimeout(() => {
+                            const mealPlan = generateMealPlan();
+                            addMessage(mealPlan, 'bot');
+                        }, 1500);
                         break;
+                    default:
+                        // Manejo de preguntas posteriores sobre recetas
+                        addMessage("¿Te gustaría generar un nuevo plan o tienes alguna pregunta específica sobre las recetas?", 'bot');
                 }
                 currentStep++;
             }
 
-            // Función para generar el plan de comidas
-            function generateMealPlan() {
-                const planMessage = "¡Gracias por proporcionar toda la información! Estoy procesando tu plan de comidas personalizado...";
-                addMessage(planMessage, 'bot');
-                // Aquí iría la lógica para generar el plan de comidas
-            }
-
-            // Agregar mensaje al chat
             function addMessage(text, type) {
-                const chatArea = document.querySelector(_0x5c1b(_0x4f8a[25]));
-                const messageDiv = document[_0x5c1b(_0x4f8a[12])](_0x5c1b(_0x4f8a[13]));
-                messageDiv.className = _0x5c1b(_0x4f8a[14]) + type;
-                messageDiv[_0x5c1b(_0x4f8a[15])] = text;
-                chatArea[_0x5c1b(_0x4f8a[16])](messageDiv);
-                chatArea[_0x5c1b(_0x4f8a[17])] = chatArea[_0x5c1b(_0x4f8a[18])];
+                const chatArea = document.querySelector('#chatArea');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message ' + type;
+                messageDiv.innerHTML = text;
+                chatArea.appendChild(messageDiv);
+                chatArea.scrollTop = chatArea.scrollHeight;
             }
 
-            // Event listener para la tecla Enter
-            document.querySelector(_0x5c1b(_0x4f8a[24]))[_0x5c1b(_0x4f8a[6])](_0x5c1b(_0x4f8a[7]), (e) => {
-                if (e[_0x5c1b(_0x4f8a[8])] === _0x5c1b(_0x4f8a[9])) {
-                    e[_0x5c1b(_0x4f8a[10])]();
+            document.querySelector('#userInput').addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
                     sendMessage();
                 }
             });
